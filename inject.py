@@ -16,11 +16,11 @@ if skos.WIN:
     """
     dprint("enter")
     ret = True
-    for dllpath in ['C:/dataH/vnr3test/Visual Novel Reader V3/Library/Frameworks/Python/msvcr100.dll',
-                    'C:/dataH/vnr3test/Visual Novel Reader V3/Library/Frameworks/Python/msvcp100.dll',
-                    'C:/dataH/vnr3test/Visual Novel Reader V3/Library/Frameworks/Qt/PySide/QtCore4.dll',
-                    'C:/dataH/vnr3test/Visual Novel Reader V3/Library/Frameworks/Qt/PySide/QtNetwork4.dll',
-                    'C:/dataH/vnr3test/Visual Novel Reader V3/Library/Frameworks/Sakura/bin/vnragent.dll']:
+    for dllpath in ['dlls/msvcr100.dll',
+                    'dlls/msvcp100.dll',
+                    'dlls/QtCore4.dll',
+                    'dlls/QtNetwork4.dll',
+                    'dlls/vnragent.dll']:
       
       #dllpath = os.path.abspath(dllpath)
       dllpath = skpaths.abspath(dllpath)
