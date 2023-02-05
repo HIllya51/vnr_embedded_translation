@@ -10,7 +10,7 @@ from sakurakit.skclass import memoized, memoizedproperty
 from sakurakit.skdebug import dwarn
 #from sakurakit.skqml import QmlObject
 from sakurakit.sktypes import to_int, to_unicode #to_long
-import defs, config
+import   config
 
 # http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
 # win32con
@@ -852,7 +852,7 @@ class Settings(QSettings):
       self.setValue('autoUpdateDict', v)
 
   internetConnectionChanged = Signal(str)
-  def internetConnection(self): return self.value('InternetConnection', defs.INTERNET_CONNECTION_AUTO)
+  def internetConnection(self): return self.value('InternetConnection', 'auto')
   def setInternetConnection(self, value):
     if value != self.internetConnection():
       self.setValue('InternetConnection', value)
