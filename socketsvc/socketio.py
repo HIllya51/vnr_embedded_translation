@@ -3,9 +3,12 @@
 # jichi 4/28/2014
 
 import os
-from PySide.QtCore import QIODevice
+from PyQt5.QtCore import QIODevice
 from sakurakit.skdebug import dprint, dwarn
-import socketpack
+
+import sys
+sys.path.append(__file__)
+from socketsvc import socketpack
 
 MESSAGE_HEAD_SIZE = socketpack.INT_SIZE # = 4
 
@@ -69,6 +72,7 @@ def readsocket(socket):
       dprint("insufficient head size")
       return
     ba = socket.read(headSize)
+    print(ba)
     size = socketpack.unpackuint32(ba)
     if not size:
       dwarn("empty message size")

@@ -6,8 +6,7 @@
 if __name__ == '__main__':
   import sys
   sys.path.append('..')
-
-from itertools import imap
+ 
 from sakurakit.skdebug import dwarn
 from sakurakit.skunicode import qunicode
 #from PySide.QtCore import QByteArray
@@ -44,7 +43,7 @@ def unpackuint32(s, i=0): #
   @param*  i  int  start index
   @return  int
   """
-  return (ord(s[i]) << 24) | (ord(s[i+1]) << 16) | (ord(s[i+2]) << 8) | ord(s[i+3]) if len(s) >= 4 + i else 0
+  return ( (s[i]) << 24) | ( (s[i+1]) << 16) | ( (s[i+2]) << 8) |  (s[i+3]) if len(s) >= 4 + i else 0
 
 def packuint(i, size=0): # int -> str
   """
@@ -85,6 +84,7 @@ def packdata(data):
 # String list
 
 def _unicode(data, encoding): # str|QByteArray, str -> unicode
+  print(data)
   if isinstance(data, str):
     return data.decode(encoding, errors='ignore')
   else:
@@ -99,11 +99,11 @@ def packstrlist(l, encoding='utf8'):
   body = []
   head.append(len(l))
   for s in l:
-    if isinstance(s, unicode):
+    if isinstance(s, str):
       s = s.encode(encoding, errors='ignore')
     head.append(len(s))
     body.append(s)
-  return ''.join(imap(packuint32, head)) + ''.join(body)
+  return ''.join(map(packuint32, head)) + ''.join(body)
 
 def unpackstrlist(data, encoding='utf8'):
   """
@@ -135,26 +135,9 @@ def unpackstrlist(data, encoding='utf8'):
       ret.append('')
     else:
       s = data[offset:offset+size]
-      s = _unicode(s, encoding)
+      s = s.decode(encoding=encoding,errors='ignore')
       ret.append(s)
       offset += size
   return ret
-
-if __name__ == '__main__':
-  l = ['aa', 'bbb', u'あれ？']
-
-  print len(l), l
-  for it in l:
-    print it
-
-  data =  packstrlist(l)
-  print len(data), data
-  l = unpackstrlist(data)
-  print len(l), l
-  for it in l:
-    print it
-
-  i = 128
-  print packuint(i, 4) == packuint32(i)
-
+ 
 # EOF

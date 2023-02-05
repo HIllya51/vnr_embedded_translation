@@ -7,7 +7,7 @@ __all__ = 'RpcServer'
 RPC_WAIT_TIME = 3000 # wait time after sending data
 
 from socketsvc import socketpack
-import config
+import config,growl
 
 ENABLE_TCP_SOCKET = config.APP_SOCKET_TYPE == 'tcp'
  
@@ -38,14 +38,12 @@ def _unmarshalBool(s): # str -> bool
 def _marshalBool(v): # int -> str, use hex
   return '1' if v else '0'
 
-#from ctypes import c_longlong
+#from ctypes import c_intint
 from functools import partial
 import json
-from PySide.QtCore import Signal, Qt, QObject
-from sakurakit.skclass import Q_Q, memoized
+from PyQt5.QtCore import pyqtSignal, Qt, QObject  
 from sakurakit.skdebug import dwarn, dprint     
-
-@memoized
+ 
 def manager(): return RpcServer()
 
 class RpcServer(QObject):
@@ -55,7 +53,7 @@ class RpcServer(QObject):
     self.__d =_RpcServer(self)
     self.__d.q=self
     dwarn("rpcserver_Created")
-  activated = Signal()
+  activated = pyqtSignal()
 
   def stop(self):
     self.__d.server.stop()
@@ -67,15 +65,15 @@ class RpcServer(QObject):
     """@return  bool"""
     return self.__d.server.isActive()
 
-  activated = Signal()
+  activated = pyqtSignal()
 
   # Agent
 
-  agentConnected = Signal(long) # pid
-  agentDisconnected = Signal(long) # pid
-  windowTextsReceived = Signal(dict) # {long hash:unicode text}
-  engineReceived = Signal(str) # name
-  engineTextReceived = Signal(unicode, str,  int, str) # text, hash, role, needsTranslation
+  agentConnected = pyqtSignal(int) # pid
+  agentDisconnected = pyqtSignal(int) # pid
+  windowTextsReceived = pyqtSignal(dict) # {int hash:str text}
+  engineReceived = pyqtSignal(str) # name
+  engineTextReceived = pyqtSignal(str, str,  int, str) # text, hash, role, needsTranslation
 
   def isAgentConnected(self): return bool(self.__d.agentSocket)
   def closeAgent(self): self.__d.closeAgentSocket()
@@ -94,7 +92,7 @@ class RpcServer(QObject):
     try:
       data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
       self.__d.callAgent('settings', data)
-    except TypeError, e:
+    except TypeError as e:
       dwarn("failed to encode json: %s" % e)
 
   def clearAgentTranslation(self): self.__d.callAgent('clear')
@@ -106,16 +104,16 @@ class RpcServer(QObject):
     try:
       data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
       self.__d.callAgent('window.text', data)
-    except TypeError, e:
+    except TypeError as e:
       dwarn("failed to encode json: %s" % e)
 
   #def sendEngineTranslation(self, text, hash, role):
   #  """
-  #  @param  text  unicode
-  #  @param  hash  long
+  #  @param  text  str
+  #  @param  hash  int
   #  @param  role  int
   #  """
-  #  if isinstance(hash, (int, long)):
+  #  if isinstance(hash, (int, int)):
   #    hash = _marshalInteger(hash)
   #  self.__d.callAgent('engine.text',
   #      text, hash, _marshalInteger(role))
@@ -129,7 +127,7 @@ class _RpcServer(object):
     self.server.disconnected.connect(self._onDisconnected)
 
     self.agentSocket = None # QAbstractSocket
-    self.agentPid = 0 # long
+    self.agentPid = 0 # int
 
   # Send
 
@@ -160,12 +158,24 @@ class _RpcServer(object):
     """
     @param  socket  QTcpSocket
     @param  cmd  str
-    @param  params  [unicode]
+    @param  params  [str]
     """
     dwarn(cmd)
     if cmd == 'app.activate':
       self.q.activated.emit()
  
+    elif cmd == 'growl.msg':
+      if params:
+        growl.msg(params[0])
+    elif cmd == 'growl.warn':
+      if params:
+        growl.warn(params[0])
+    elif cmd == 'growl.error':
+      if params:
+        growl.error(params[0])
+    elif cmd == 'growl.notify':
+      if params:
+        growl.notify(params[0])
     elif cmd == 'agent.ping':
       if params:
         pid = _unmarshalInteger(params[0])
@@ -198,13 +208,13 @@ class _RpcServer(object):
   def _onAgentPing(self, socket, pid):
     """
     @param  socket  QTcpSocket
-    @param  pid  long
+    @param  pid  int
     """ 
     if self.agentSocket:
       self.server.closeSocket(self.agentSocket)
     self.agentPid = pid
     self.agentSocket = socket
-    self.q.agentConnected.emit(pid) # SIGNAL TO BE CHANGED
+    self.q.agentConnected.emit(pid) # pyqtSignal TO BE CHANGED
 
   def _onWindowTexts(self, data):
     """
@@ -213,17 +223,17 @@ class _RpcServer(object):
     try:
       d = json.loads(data)
       if d and type(d) == dict:
-        d = {long(k):v for k,v in d.iteritems()}
+        d = {int(k):v for k,v in d.iteritems()}
         self.q.windowTextsReceived.emit(d)
       else:
         dwarn("error: json is not a map: %s" % data)
-    except (ValueError, TypeError, AttributeError), e:
+    except (ValueError, TypeError, AttributeError) as e:
       dwarn(e)
       #dwarn("error: malformed json: %s" % data)
 
   def _onEngineText(self, text, hash, sig, role, trans):
     """
-    @param  text  unicode
+    @param  text  str
     @param  hash  qint64
     @param  role  int
     @param  trans  bool   need translation

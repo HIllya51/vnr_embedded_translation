@@ -1,9 +1,9 @@
 
 import time
 import sys
-from PySide.QtCore import QCoreApplication 
-from PySide.QtGui import QMainWindow,QApplication
-from rpcserver import RpcServer
+from PyQt5.QtCore import QCoreApplication 
+from PyQt5.QtWidgets import QMainWindow,QApplication
+from rpcman import RpcServer
 from gameagent import GameAgent
 if __name__=="__main__":
     app =  QApplication(sys.argv) 
