@@ -8,7 +8,7 @@ if skos.WIN:
   import os 
   from sakurakit.skdebug import dprint,dwarn
 
-  def inject_vnragent(**kwargs):
+  def inject_vnragent(pid):
     """
     @param* pid  ulong
     @param* handle  HANDLE
@@ -26,7 +26,9 @@ if skos.WIN:
       dllpath = skpaths.abspath(dllpath)
       dwarn("inject dll",dllpath)
       assert os.path.exists(dllpath), "needed dll does not exist: %s" % dllpath
-      ret = skwinsec.injectdll(dllpath, **kwargs) and ret
+      
+      os.system('dllinject32.exe '+str(pid)+'"'+dllpath+'"')
+      #ret = skwinsec.injectdll(dllpath, **kwargs) and ret
     dprint("leave: ret = %s" % ret)
     return ret
  
