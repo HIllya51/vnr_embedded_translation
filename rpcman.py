@@ -88,12 +88,11 @@ class RpcServer(QObject):
   def setAgentSettings(self, data):
     """
     @param  data  {k:v}
-    """
-    try:
-      data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
-      self.__d.callAgent('settings', data)
-    except TypeError as e:
-      dwarn("failed to encode json: %s" % e)
+    """ 
+    print(data)
+    data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
+    self.__d.callAgent('settings', data)
+     
 
   def clearAgentTranslation(self): self.__d.callAgent('clear')
 

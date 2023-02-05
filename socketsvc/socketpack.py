@@ -59,7 +59,8 @@ def packuint(i, size=0): # int -> str
     r = chr(0) + r
   return r
 
-def packuint32(i): # int -> str
+def packuint32(i:int): # int -> str 
+  return i.to_bytes(4,'little')
   """
   @param  number  i
   @return  str  4 bytes
@@ -79,6 +80,7 @@ def packdata(data):
   #if not isinstance(data, QByteArray):
   #  data = QByteArray(data)
   size = len(data)
+  print( 'sz',packuint32(size), 'data',data)
   return packuint32(size) + data
 
 # String list
@@ -103,6 +105,13 @@ def packstrlist(l, encoding='utf8'):
       s = s.encode(encoding, errors='ignore')
     head.append(len(s))
     body.append(s)
+  print(head,body)
+  x=b''
+  for _ in head:
+    x+=packuint32(_)
+  for _ in body:
+    x+=_
+  return x
   return ''.join(map(packuint32, head)) + ''.join(body)
 
 def unpackstrlist(data, encoding='utf8'):

@@ -7,3 +7,4 @@
 *.obj
 *.recipe
 dllinject32/.vs/dllinject32/v16/.suo
+*.pyc
