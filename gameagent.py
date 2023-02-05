@@ -133,6 +133,7 @@ class GameAgent(QObject):
     @param  role  int
     @param  language  str
     """
+    print(hash)
     if isinstance(hash, str):
       hash = int(hash)
     m = self.__d.mem
@@ -140,7 +141,7 @@ class GameAgent(QObject):
       # Due to the logic, locking is not needed
       index = m.nextIndex()
       from sakurakit.skdebug import dprint, dwarn, debugmethod
-      dwarn("send_embed_trans_index",index)
+      dwarn("send_embed_trans_index",index,hash)
       m.setDataStatus(index, m.STATUS_BUSY)
       m.setDataHash(index, hash)
       m.setDataRole(index, role)
