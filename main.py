@@ -10,7 +10,7 @@ if __name__=="__main__":
     rpc=RpcServer(app)
     rpc.start()   
     ga=GameAgent(rpc)
-    ga.attachProcess(pid=9348)
+    ga.attachProcess(pid=14196)
     rpc.engineTextReceived.connect(ga.sendEmbeddedTranslation)
     rpc.clearAgentTranslation()
     x=QMainWindow()

@@ -119,8 +119,7 @@ class RpcServer(QObject):
  
 class _RpcServer(object):
   def __init__(self, q):
-    self.server = createSocketServer(parent=q)
-
+    self.server = createSocketServer(parent=q) 
     self.server.dataReceived.connect(self._onDataReceived)
 
     self.server.disconnected.connect(self._onDisconnected)
@@ -132,6 +131,7 @@ class _RpcServer(object):
 
   def callAgent(self, *args):
     if self.agentSocket:
+      dwarn("beforepack",args)
       data = socketpack.packstrlist(args)
       dwarn("senddata",str(data))
       self.server.sendData(data, self.agentSocket, waitTime=RPC_WAIT_TIME)

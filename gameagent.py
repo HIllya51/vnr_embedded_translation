@@ -255,6 +255,7 @@ class _GameAgent(object):
 
   def _onAttached(self):
     self.injectTimer.stop()
+    dwarn("attached__OK")
     self.sendSettings()
     #self.rpc.enableAgent()
 
