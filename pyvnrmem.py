@@ -17,15 +17,11 @@ class VnrSharedMemory(QObject):
     def __init__(self,p=None ) :
         super(VnrSharedMemory,self).__init__() 
         self.cellCount_=0
-        self.cellSize_=0
+        self.cellSize_=0  #实际上没有jb用。。。只会用第一个cell
         self.memory=QSharedMemory()
     def textCapacity(self):
         return int(max(0,(self.cellSize_-4)/2))
-    def data(self,i):
-        print(self.memory.data())
-        print(  str(self.memory.data(),encoding='utf8'))
-        return memoryview(self.memory.data().asarray())+(self.cellSize_*i) 
-
+    
     def cellCount(self):
         return self.cellCount_
     
@@ -33,10 +29,9 @@ class VnrSharedMemory(QObject):
         return self.cellSize_
     def constData(self,i): 
         self.memory.constData()+(self.cellSize_*i)
-    def cell(self,i): 
-        return cast(POINTER(self.data(i)),POINTER(Cell)).contents 
-    def constCell(self,i):
-        return cast(POINTER(self.constData(i)),POINTER(Cell)).contents 
+    def cell(self,i):  
+        return cast(POINTER(self.memory.data().asarray() ),POINTER(Cell)).contents 
+        
     def key(self):
         self.memory.key()
     def setKey(self,v):
@@ -62,19 +57,32 @@ class VnrSharedMemory(QObject):
     def hasError(self):
         return self.memory.error()!=QSharedMemory.NoError 
     def setDataHash(self,i,v):
-        self.cell(i).hash=v 
+        pass
+        #self.cell(i).hash=v 
     def setDataStatus(self,i,v):
-        self.cell(i).status=v 
+        pass
+        #self.cell(i).status=v 
     def setDataRole(self,i,v):
-        self.cell(i).role=v 
+        pass
+        #self.cell(i).role=v 
     def setDataLanguage(self,i,v):
-        p=self.cell(i)
-        u8=v.encode('utf8')
-        for i in range(min(len(u8),LanguageCapacity)):
-            p.language[i]=u8[i] 
+        pass
+        # p=self.cell(i)
+        # u8=v.encode('utf8')
+        # for i in range(min(len(u8),LanguageCapacity)):
+        #     p.language[i]=u8[i] 
     def setDataText(self,i,v):
-        w=create_unicode_buffer(v)
-        self.cell(i).language=w
+        print("settingtext",i,v)
+        print(self.memory.size())
+        print(self.memory.data())
+        print()
+        mv=memoryview(self.memory.data()).cast('i')
+        for i in range(100,0,-1):
+            if mv[i]!=0:
+                print(i)
+                break 
+        # w=create_unicode_buffer(v)
+        # self.cell(i).language=w
 
     
         
