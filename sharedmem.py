@@ -44,13 +44,13 @@ class VnrAgentSharedMemory:
       d.detach()
 
   def notify(self, hash, role): # wakeup locks
-    pid = self.__d.processId
+    pid = self.__d.processId 
     if pid:
       # must be consistent with vnragent's config.h
       eventName = "vnragent.shmem.%s.%s.%s" % (pid, role, hash)
-      eventName = eventName.replace('-', '_') # get rid of minus sign
+      eventName = eventName.replace('-', '_') # get rid of minus sign 
       import win32event
-      ev = win32event.CreateEvent(None, False, False, eventName) # initial state = False. True does NOT work
+      ev = win32event.CreateEvent(None, False, False, eventName) # initial state = False. True does NOT work 
       win32event.SetEvent(ev)
       ev.close()
 
@@ -73,6 +73,6 @@ class VnrAgentSharedMemory:
   def setDataHash(self, i, v): self.__d.setDataHash(i, v)
   def setDataRole(self, i, v): self.__d.setDataRole(i, v)
   def setDataText(self, i, v): self.__d.setDataText(i, v)
-  def setDataLanguage(self, i, v): self.__d.setDataLanguage(i, v)
+  def setDataLanguage(self, i, v): self.__d.setDataLanguage(i, v) 
 
 # EOF

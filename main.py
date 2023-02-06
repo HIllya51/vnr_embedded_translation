@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*- 
 import win32file,win32security
 import sys
 from PySide.QtCore import QCoreApplication  
@@ -18,8 +18,7 @@ class qapp(QCoreApplication):
     def __init__(self,arg) :
         super(qapp,self).__init__(arg) 
         t1=threading.Thread(target=self._creater1) 
-        t2=threading.Thread(target=self._creater2)
-        
+        t2=threading.Thread(target=self._creater2) 
         t1.start()
         t2.start()
         t1.join()
@@ -44,6 +43,7 @@ class qapp(QCoreApplication):
                   
     def transfer_to_host(self,text, hash, role ):
         lang='zhs' 
+         
         self.send(json.dumps({
             "command":"trans",
             "text":text,
@@ -63,6 +63,7 @@ class qapp(QCoreApplication):
             print_exc() 
     def _onreceive_callback(self,rd): 
         if rd['command']=='trans': 
+            print(rd)
             self.ga.sendEmbeddedTranslation(rd['text'], rd['hash'],rd['role'] ,rd['lang'])
         elif rd['command']=='end':
             self.ga.quit()

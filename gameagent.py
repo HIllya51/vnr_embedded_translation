@@ -132,11 +132,13 @@ class GameAgent(QObject):
     @param  role  int
     @param  language  str
     """
+    
     if isinstance(hash, basestring):
       hash = long(hash)
     m = self.__d.mem
-    if m.isAttached(): # and m.lock():
-       
+    if language=="0000":
+      m.notify(hash,role)
+    if m.isAttached(): # and m.lock(): 
       # Due to the logic, locking is not needed
       index = m.nextIndex()
       from sakurakit.skdebug import   dwarn    
@@ -145,9 +147,8 @@ class GameAgent(QObject):
       m.setDataRole(index, role)
       m.setDataLanguage(index, language)
       
-      m.setDataText(index, text)
-      print("zuizhongjieguo",language,text)
-      m.setDataStatus(index, m.STATUS_READY) 
+      m.setDataText(index, text) 
+      m.setDataStatus(index, m.STATUS_READY)  
       m.notify(hash, role)
 
   def cancelEmbeddedTranslation(self, text, hash, role):
