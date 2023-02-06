@@ -18,14 +18,14 @@ class Cell(Structure):
             ('role',c_int8),    #1
             ('language',c_char*LanguageCapacity), #8
             ('textSize',c_int32),#4
-            ('text',c_wchar_p)#textsize*2(不记末尾0)
+            ('text',c_wchar_p) 
         ]
 class VnrSharedMemory(QObject):
      
     def __init__(self,p=None ) :
         super(VnrSharedMemory,self).__init__() 
         self.cellCount_=0
-        self.cellSize_=0  #实际上没有jb用。。。只会用第一个cell
+        self.cellSize_=0   
         self.memory=QSharedMemory()
     def textCapacity(self):
         return int(max(0,(self.cellSize_-4)/2))
