@@ -138,7 +138,7 @@ class GameAgent(QObject):
        
       # Due to the logic, locking is not needed
       index = m.nextIndex()
-      from sakurakit.skdebug import dprint, dwarn, debugmethod
+      from sakurakit.skdebug import   dwarn   
       dwarn("send_embed_trans_index",index)
       m.setDataStatus(index, m.STATUS_BUSY)
       m.setDataHash(index, hash)
