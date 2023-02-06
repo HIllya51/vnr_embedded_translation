@@ -17,6 +17,7 @@ class qapp(QCoreApplication):
     connected=Signal()
     engineTextReceived_tohost=Signal(unicode, str,  int )
     callbadengine=Signal()
+    disconnet=Signal()
     def __init__(self,arg) :
         super(qapp,self).__init__(arg) 
         t1=threading.Thread(target=self._creater1) 
@@ -30,12 +31,15 @@ class qapp(QCoreApplication):
         print("namepipe_ok")
         self.isconnect=False
         self.end.connect(self.quit)
+        self.disconnet.connect(self.disconnetcall)
         self.engineTextReceived_tohost.connect(self.transfer_to_host) 
         self.connected.connect(self.connectget)
         self.callbadengine.connect(self.badengine)
         threading.Thread(target=self.waitforconnect).start()
     def connectget(self ):
         self.isconnect=True
+    def disconnetcall(self):
+        self.send({"command":"disconnect"})
     def badengine(self):
         self.send({"command":"badengine"})
     def waitforconnect(self):
@@ -98,4 +102,5 @@ if __name__=="__main__":
     app.rpc.engineTextReceived.connect(app.engineTextReceived_tohost) 
     app.rpc.clearAgentTranslation() 
     app.rpc.agentConnected.connect(app.connected)
+    app.rpc.agentDisconnected.connect(app.disconnet)
     sys.exit(app.exec_())
