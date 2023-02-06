@@ -35,9 +35,10 @@ class qapp(QCoreApplication):
     def connectget(self ):
         self.isconnect=True
     def waitforconnect(self):
-        time.sleep(3)
-        self.send({"command":"no_connection"})
-        self.end.emit()
+        time.sleep(5)
+        if self.isconnect==False:
+            self.send({"command":"no_connection"})
+            self.end.emit()
     def send(self,s):
         try: 
             print("send",s)
