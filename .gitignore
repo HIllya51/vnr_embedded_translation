@@ -312,3 +312,6 @@ build/main.build/clcache-stats.12424.txt
 build/main.dist/dllinject32.exe
 build/main.dist/engines.json
 build/main.build/clcache-stats.16276.txt
+build/main.dist/win32file.pyd
+build/main.dist/win32pipe.pyd
+build/main.build/clcache-stats.3732.txt

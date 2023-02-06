@@ -139,15 +139,15 @@ class GameAgent(QObject):
        
       # Due to the logic, locking is not needed
       index = m.nextIndex()
-      from sakurakit.skdebug import   dwarn   
-      dwarn("send_embed_trans_index",index)
+      from sakurakit.skdebug import   dwarn    
       m.setDataStatus(index, m.STATUS_BUSY)
       m.setDataHash(index, hash)
       m.setDataRole(index, role)
       m.setDataLanguage(index, language)
+      
       m.setDataText(index, text)
-      m.setDataStatus(index, m.STATUS_READY)
-      print('notify')
+      print("zuizhongjieguo",language,text)
+      m.setDataStatus(index, m.STATUS_READY) 
       m.notify(hash, role)
 
   def cancelEmbeddedTranslation(self, text, hash, role):
@@ -286,7 +286,38 @@ class _GameAgent(object):
     # data['embeddedFontFamily'] = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
     # data['embeddedFontScale'] = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
     # data['embeddedFontWeight'] = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
-    data=  {"embeddedScenarioTranscodingEnabled": False, "embeddedFontCharSetEnabled": True, "embeddedTranslationWaitTime": 2000, "embeddedOtherTranscodingEnabled": False, "embeddedSpacePolicyEncoding": "", "windowTranslationEnabled": True, "windowTextVisible": True, "embeddedNameTranscodingEnabled": False, "gameEncoding": "shift-jis", "embeddedOtherTranslationEnabled": True, "embeddedSpaceSmartInserted": False, "embeddedFontCharSet": 128, "embeddedScenarioWidth": 0, "embeddedScenarioTextVisible": True, "windowTranscodingEnabled": False, "nameSignature": 0, "embeddedScenarioTranslationEnabled": True, "embeddedScenarioVisible": True, "embeddedFontScale": 0, "embeddedAllTextsExtracted": False, "embeddedOtherVisible": True, "embeddedFontFamily": "", "embeddedTextEnabled": True, "scenarioSignature": 0, "embeddedOtherTextVisible": True, "embeddedNameTextVisible": True, "embeddedSpaceAlwaysInserted": False, "embeddedNameTranslationEnabled": True, "debug": False, "embeddedNameVisible": True, "embeddedFontWeight": 0}
+    data=  {"embeddedScenarioTranscodingEnabled": False, 
+            "embeddedFontCharSetEnabled": True, 
+            "embeddedTranslationWaitTime": 2000, 
+            "embeddedOtherTranscodingEnabled": False, 
+            "embeddedSpacePolicyEncoding": "", 
+            "windowTranslationEnabled": False, 
+            "windowTextVisible": True, 
+            "embeddedNameTranscodingEnabled": False, 
+            "gameEncoding": "shift-jis", 
+            "embeddedOtherTranslationEnabled": True, 
+            "embeddedSpaceSmartInserted": False, 
+            "embeddedFontCharSet": 128, 
+            "embeddedScenarioWidth": 0, 
+            "embeddedScenarioTextVisible": True, 
+            "windowTranscodingEnabled": False, 
+            "nameSignature": 0, 
+            "embeddedScenarioTranslationEnabled": True, 
+            "embeddedScenarioVisible": True, 
+            "embeddedFontScale": 0, 
+            "embeddedAllTextsExtracted": False, 
+            "embeddedOtherVisible": True,
+            "embeddedFontFamily": "", 
+            "embeddedTextEnabled": True, 
+            "scenarioSignature": 0, 
+            "embeddedOtherTextVisible": True, 
+            "embeddedNameTextVisible": True, 
+            "embeddedSpaceAlwaysInserted": False, 
+            "embeddedNameTranslationEnabled": True, 
+            "debug": False, 
+            "embeddedNameVisible": True, 
+            "embeddedFontWeight": 0}
+ 
     self.rpc.setAgentSettings(data)
 
   def sendSetting(self, k, v):

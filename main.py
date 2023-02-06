@@ -54,18 +54,20 @@ class qapp(QCoreApplication):
     def _listener(self):     
         try:
             while True:
-                rd=win32file.ReadFile(self.pipe_get, 65535, None)[1] 
-                print("received",rd)
+                rd=win32file.ReadFile(self.pipe_get, 65535, None)[1]  
                 rd=json.loads(rd)
-                if rd=='quit': 
-                    self.ga.quit()
-                    self.rpc.stop()
-                    self.end.emit()
-                    break
-                if rd['command']=='trans': 
-                    self.ga.sendEmbeddedTranslation(rd['text'], rd['hash'],rd['role'] ,rd['lang'])
+                print("received",rd)
+                self._onreceive_callback(rd) 
+                
         except:
             print_exc() 
+    def _onreceive_callback(self,rd): 
+        if rd['command']=='trans': 
+            self.ga.sendEmbeddedTranslation(rd['text'], rd['hash'],rd['role'] ,rd['lang'])
+        elif rd['command']=='end':
+            self.ga.quit()
+            self.rpc.stop()
+            self.end.emit()
 if __name__=="__main__":
     app =  qapp(sys.argv) 
     app.rpc=RpcServer(app)
@@ -74,7 +76,7 @@ if __name__=="__main__":
     app.ga.attachProcess(pid=int(sys.argv[1])) 
     engine=app.ga.guessEngine(pid=int(sys.argv[1]))
     if engine:
-        app.send(json.dumps({'command':"engine","name":engine.name}))
+        app.send(json.dumps({'command':"engine","name":engine.name},ensure_ascii=False))
     app.rpc.engineTextReceived.connect(app.engineTextReceived_tohost) 
     app.rpc.clearAgentTranslation() 
     sys.exit(app.exec_())
