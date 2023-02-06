@@ -308,3 +308,6 @@ build/main.build/engines.py
 build/main.build/engines.yaml
 build/main.build/vnragent.py
 build/main.dist/vnragent.dll
+build/main.build/clcache-stats.12424.txt
+build/main.dist/dllinject32.exe
+build/main.dist/engines.json

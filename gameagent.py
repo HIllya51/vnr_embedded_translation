@@ -251,7 +251,8 @@ class _GameAgent(object):
       self.q.processAttachTimeout.emit(self.injectedPid)
       self.injectedPid = 0
 
-  def _onAttached(self):
+  def _onAttached(self,_):
+    dwarn("attached")
     self.injectTimer.stop()
     self.sendSettings()
     #self.rpc.enableAgent()
