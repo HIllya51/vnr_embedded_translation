@@ -50,6 +50,7 @@ class RpcServer(QObject):
 
   def __init__(self, parent=None):
     super(RpcServer, self).__init__(parent)
+    self.app=parent
     self.__d =_RpcServer(self)
     self.__d.q=self
     dwarn("rpcserver_Created")
@@ -73,7 +74,7 @@ class RpcServer(QObject):
   agentDisconnected = Signal(long) # pid
   windowTextsReceived = Signal(dict) # {long hash:unicode text}
   engineReceived = Signal(str) # name
-  engineTextReceived = Signal(unicode, str,  int, str) # text, hash, role, needsTranslation
+  engineTextReceived = Signal(unicode, str,  int ) # text, hash, role, needsTranslation
 
   def isAgentConnected(self): return bool(self.__d.agentSocket)
   def closeAgent(self): self.__d.closeAgentSocket()
@@ -233,10 +234,8 @@ class _RpcServer(object):
       trans = _unmarshalBool(trans) 
       if trans:
         print(text)
-
-      trans=text+"haha"
-      lang='zhs'
-      self.q.engineTextReceived.emit(trans, hash,   role,lang)
+  
+        self.q.engineTextReceived.emit(text, hash,   role )
       #if trans:
       #  print role, len(text)
       #  text = u'简体中文' + text

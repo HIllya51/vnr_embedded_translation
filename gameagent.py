@@ -75,6 +75,7 @@ class GameAgent(QObject):
     d.mem.quit()
     if d.connectedPid:
       d.rpc.disableAgent()
+    dprint("quit")
 
   #def setGameLanguage(self, v):
   #  self.__d.gameLanguage = v
