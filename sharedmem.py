@@ -1,7 +1,8 @@
 # coding: utf8
 # sharedmem.py
 # 5/8/2014 jichi
- 
+
+from PySide.QtCore import Signal, Slot, Property, Qt
 from sakurakit.skdebug import dprint, dwarn
 from pyvnrmem import VnrSharedMemory
 import config
@@ -14,13 +15,9 @@ class VnrAgentSharedMemory:
   STATUS_CANCEL = 3
 
   def __init__(self, parent=None):
-    print(parent)
     d = self.__d = VnrSharedMemory(parent)
     d.processId = 0 # long
-    try:
-      d.detach = d.detach_ # detach get renamed because of shiboken bug
-    except:
-      pass
+    d.detach = d.detach_ # detach get renamed because of shiboken bug
     d.index = 0 # int  current cell index
 
   def isAttached(self): return bool(self.__d.processId) and self.__d.isAttached()
@@ -72,24 +69,10 @@ class VnrAgentSharedMemory:
     return d.index
 
   # Write-only
-  def setDataStatus(self, i, v): 
-    dprint('setDataStatus',i,v)
-    self.__d.setDataStatus(i, v) 
-  def setDataHash(self, i, v): 
-    
-    dprint('setDataHash',i,v)
-    self.__d.setDataHash(i, v)
-  def setDataRole(self, i, v): 
-    
-    dprint('setDataRole',i,v)
-    self.__d.setDataRole(i, v)
-  def setDataText(self, i, v): 
-    
-    dprint('setDataText',i,v)
-    self.__d.setDataText(i, v)
-  def setDataLanguage(self, i, v): 
-    
-    dprint('setDataLanguage',i,v)
-    self.__d.setDataLanguage(i, v)
+  def setDataStatus(self, i, v): self.__d.setDataStatus(i, v)
+  def setDataHash(self, i, v): self.__d.setDataHash(i, v)
+  def setDataRole(self, i, v): self.__d.setDataRole(i, v)
+  def setDataText(self, i, v): self.__d.setDataText(i, v)
+  def setDataLanguage(self, i, v): self.__d.setDataLanguage(i, v)
 
 # EOF

@@ -7,7 +7,8 @@ if __name__ == '__main__': # DEBUG
   import sys
   sys.path.append("..")
 
-import os 
+import os
+from sakurakit.skclass import memoized
 from sakurakit.skdebug import dprint
 
 ENGINE_YAML = os.path.join(os.path.dirname(__file__), 'engines.yaml')
@@ -21,10 +22,11 @@ def _complete_path(path):
   if path and len(path) > 2 and path[0] == '\\' and path[1] != '\\':
     path = '\\' + path
   return path
- 
+
+@memoized
 def get_engine_data():
   import yaml
-  return yaml.load(open(ENGINE_YAML, 'r'))
+  return yaml.load(file(ENGINE_YAML, 'r'))
 
 def match(pid=0, path=''):
   """

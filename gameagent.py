@@ -3,12 +3,13 @@
 # 5/2/2014 jichi
 
 from functools import partial
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer 
+from PySide.QtCore import QObject, Signal, QTimer
+from sakurakit.skclass import memoized, Q_Q
 from sakurakit.skdebug import dprint
 from vnragent import vnragent  
-import config, sharedmem 
+import config, sharedmem, settings
 from sakurakit.skdebug import dprint, dwarn
- 
+@memoized
 def global_(): return GameAgent()
 
 class GameAgent(QObject):
@@ -16,11 +17,11 @@ class GameAgent(QObject):
     super(GameAgent, self).__init__(parent)
     self.__d = _GameAgent(self,rpc)
     self.__d.q=self
-  processAttached = pyqtSignal(int) # pid
-  processDetached = pyqtSignal(int) # pid
+  processAttached = Signal(long) # pid
+  processDetached = Signal(long) # pid
 
-  processAttachTimeout = pyqtSignal(int)
-  engineChanged = pyqtSignal(str) # name
+  processAttachTimeout = Signal(long)
+  engineChanged = Signal(str) # name
 
   # Not used
   #def clear(self): self.__d.clear()
@@ -28,10 +29,10 @@ class GameAgent(QObject):
   ## Inject ##
 
   def isAttached(self): return bool(self.__d.injectedPid)
-  def attachedPid(self): return self.__d.injectedPid # -> int not None
+  def attachedPid(self): return self.__d.injectedPid # -> long not None
 
   def isConnected(self): return bool(self.__d.connectedPid)
-  def connectedPid(self): return self.__d.connectedPid # -> int not None
+  def connectedPid(self): return self.__d.connectedPid # -> long not None
 
   def attachProcess(self, pid): # -> bool
     d = self.__d
@@ -64,7 +65,7 @@ class GameAgent(QObject):
   @staticmethod
   def guessEngine(**kwargs):
     """
-    @param* pid  int
+    @param* pid  long
     @param* path  unicode  game executable path
     @return  vnragent.Engine
     """
@@ -133,22 +134,22 @@ class GameAgent(QObject):
     @param  role  int
     @param  language  str
     """
-    print(hash)
-    if isinstance(hash, str):
-      hash = int(hash)
+    if isinstance(hash, basestring):
+      hash = long(hash)
     m = self.__d.mem
     if m.isAttached(): # and m.lock():
+       
       # Due to the logic, locking is not needed
       index = m.nextIndex()
       from sakurakit.skdebug import dprint, dwarn, debugmethod
-      dwarn("send_embed_trans_index",index,hash)
+      dwarn("send_embed_trans_index",index)
       m.setDataStatus(index, m.STATUS_BUSY)
       m.setDataHash(index, hash)
       m.setDataRole(index, role)
       m.setDataLanguage(index, language)
       m.setDataText(index, text)
       m.setDataStatus(index, m.STATUS_READY)
-      #m.unlock()
+      print('notify')
       m.notify(hash, role)
 
   def cancelEmbeddedTranslation(self, text, hash, role):
@@ -211,22 +212,22 @@ class _GameAgent(object):
 
     self.clear()
 
-    # ss = settings.global_()
-    # for k,v in _SETTINGS_DICT.iteritems():
-    #   sig = getattr(ss, k + 'Changed')
+    ss = settings.global_()
+    for k,v in _SETTINGS_DICT.iteritems():
+      sig = getattr(ss, k + 'Changed')
 
-    #   sig.connect(partial(lambda k, t:
-    #     self.connectedPid and self.sendSetting(k, t)
-    #   , k))
+      sig.connect(partial(lambda k, t:
+        self.connectedPid and self.sendSetting(k, t)
+      , k))
 
-    # for sig in ss.embeddedScenarioWidthChanged, ss.embeddedScenarioWidthEnabledChanged:
-    #   sig.connect(self._sendScenarioWidth)
-    # for sig in ss.embeddedFontFamilyChanged, ss.embeddedFontEnabledChanged:
-    #   sig.connect(self._sendFontFamily)
-    # for sig in ss.embeddedFontScaleChanged, ss.embeddedFontScaleEnabledChanged:
-    #   sig.connect(self._sendFontScale)
-    # for sig in ss.embeddedFontWeightChanged, ss.embeddedFontWeightEnabledChanged:
-    #   sig.connect(self._sendFontWeight)
+    for sig in ss.embeddedScenarioWidthChanged, ss.embeddedScenarioWidthEnabledChanged:
+      sig.connect(self._sendScenarioWidth)
+    for sig in ss.embeddedFontFamilyChanged, ss.embeddedFontEnabledChanged:
+      sig.connect(self._sendFontFamily)
+    for sig in ss.embeddedFontScaleChanged, ss.embeddedFontScaleEnabledChanged:
+      sig.connect(self._sendFontScale)
+    for sig in ss.embeddedFontWeightChanged, ss.embeddedFontWeightEnabledChanged:
+      sig.connect(self._sendFontWeight)
  
     # Got this value from embeddedprefs.py
     self.extractsAllTexts = False
@@ -238,7 +239,7 @@ class _GameAgent(object):
         self.sendSetting('embeddedTextEnabled', t)
 
   def clear(self):
-    self.injectedPid = 0 # int
+    self.injectedPid = 0 # long
     self.engineName = '' # str
     self.gameEncoding = 'shift-jis' # placeholder
 
@@ -255,11 +256,10 @@ class _GameAgent(object):
 
   def _onAttached(self):
     self.injectTimer.stop()
-    dwarn("attached__OK")
     self.sendSettings()
     #self.rpc.enableAgent()
 
-  def _onDetached(self, pid): # int ->
+  def _onDetached(self, pid): # long ->
     self.mem.detachProcess(pid)
 
   def _onEngineReceived(self, name): # str
@@ -273,21 +273,20 @@ class _GameAgent(object):
     else:
       dwarn( ("Unrecognized game engine. Fallback to ITH."))
 
-  def sendSettings(self): 
-     
-    # data['debug'] = False
-    # data['gameEncoding'] = self.gameEncoding
-    # data['embeddedTextEnabled'] =True# self.textExtractionEnabled
-    # data['embeddedAllTextsExtracted'] = self.extractsAllTexts
-    # data['scenarioSignature'] = self.scenarioSignature
-    # data['nameSignature'] = self.nameSignature
+  def sendSettings(self):
+    ss = settings.global_()
+    data = {k:apply(getattr(ss, v)) for k,v in _SETTINGS_DICT.iteritems()}
+    data['debug'] = False
+    data['gameEncoding'] = self.gameEncoding
+    data['embeddedTextEnabled'] =True# self.textExtractionEnabled
+    data['embeddedAllTextsExtracted'] = self.extractsAllTexts
+    data['scenarioSignature'] = self.scenarioSignature
+    data['nameSignature'] = self.nameSignature
 
-    # data['embeddedScenarioWidth'] = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
-    # data['embeddedFontFamily'] = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
-    # data['embeddedFontScale'] = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
-    # data['embeddedFontWeight'] = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
-
-    data={'embeddedScenarioTranscodingEnabled': False, 'embeddedScenarioTranslationEnabled': True, 'windowTextVisible': True, 'embeddedTranslationWaitTime': 2000, 'embeddedScenarioVisible': True, 'embeddedNameTranscodingEnabled': False, 'embeddedNameTextVisible': True, 'embeddedOtherTranscodingEnabled': False, 'embeddedSpacePolicyEncoding': u'', 'embeddedOtherTranslationEnabled': True, 'embeddedSpaceSmartInserted': False, 'embeddedSpaceAlwaysInserted': False, 'embeddedNameTranslationEnabled': True, 'embeddedOtherTextVisible': True, 'embeddedFontCharSet': 128, 'embeddedFontCharSetEnabled': True, 'embeddedScenarioTextVisible': True, 'windowTranscodingEnabled': False, 'embeddedNameVisible': True, 'embeddedOtherVisible': True, 'windowTranslationEnabled': True}
+    data['embeddedScenarioWidth'] = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
+    data['embeddedFontFamily'] = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
+    data['embeddedFontScale'] = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
+    data['embeddedFontWeight'] = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
     self.rpc.setAgentSettings(data)
 
   def sendSetting(self, k, v):

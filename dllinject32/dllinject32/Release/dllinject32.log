@@ -1,0 +1,11 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output 目录未以斜杠结尾。  此生成实例将添加斜杠，因为必须有这个斜杠才能正确计算 Output 目录。
+  dllinject32.cpp
+C:\Users\11737\Documents\GitHub\vnr_embedded_translation\dllinject32\dllinject32\dllinject32.cpp(19,13): warning C4477: “wprintf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“wchar_t *”
+C:\Users\11737\Documents\GitHub\vnr_embedded_translation\dllinject32\dllinject32\dllinject32.cpp(21,12): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“HANDLE”
+C:\Users\11737\Documents\GitHub\vnr_embedded_translation\dllinject32\dllinject32\dllinject32.cpp(31,16): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“LPVOID”
+  正在生成代码
+  3 of 6 functions (50.0%) were compiled, the rest were copied from previous compilation.
+    2 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  dllinject32.vcxproj -> C:\Users\11737\Documents\GitHub\vnr_embedded_translation\dllinject32.exe

@@ -13,7 +13,7 @@ def u_from_native(s):
   # Following contents are copied from sakurakit.skunicode
   import locale
   lc, enc = locale.getdefaultlocale()
-  return s.encode(enc, errors='ignore')
+  return s.decode(enc, errors='ignore')
 
 #def get_relpath(path): # unicode -> unicode
 #  return os.path.relpath(os.path.abspath(path), os.getcwd())
@@ -32,11 +32,11 @@ BRANDS_YAML_LOCATION = os.path.join(ROOT_LOCATION, "yaml/brands.yaml")
 ENGINES_YAML_LOCATION = os.path.join(ROOT_LOCATION, "yaml/engines.yaml")
 #ZUNKO_YAML_LOCATION = os.path.join(ROOT_LOCATION, "yaml/zunko.yaml")
 
-ROOT_LOCATION_U = (ROOT_LOCATION)
+ROOT_LOCATION_U = u(ROOT_LOCATION)
 
 def load_yaml_file(path):
   import yaml
-  return yaml.load(open(path, 'r',encoding='utf8'))
+  return yaml.load(file(path, 'r'))
 
 SHARE_YAML = load_yaml_file(SHARE_YAML_LOCATION)
 APP_YAML = load_yaml_file(APP_YAML_LOCATION)
@@ -59,7 +59,7 @@ def parse_path(path):
   """
   @param  path  unicode
   @return  unicode  absolute path
-  """ 
+  """
   return path.replace('$PWD', ROOT_LOCATION_U)
 
 #def parse_abspath(path):
@@ -279,7 +279,7 @@ PROXY_GETCHU = _PROXY['getchu']
 PROXY_DLSITE = _PROXY['dlsite']
 PROXY_DLSITE_IMG = _PROXY['dlsite_img']
 
-PROXY_SITES = {v:k for k,v in _PROXY['sites'].items()} # {string host url:string proxy key}
+PROXY_SITES = {v:k for k,v in _PROXY['sites'].iteritems()} # {string host url:string proxy key}
 PROXY_DOMAINS = frozenset((it.replace('www.', '') for it in PROXY_SITES))
 
 GOOGLE = SHARE_YAML['google']
@@ -293,7 +293,7 @@ TWITTER_TWIMG_PBS = TWITTER['twimg']['pbs']
 TWITTER_SEARCH = TWITTER['search']
 
 #CDN = {k: parse_url(v) # {str name:unicode abspath}
-#    for k,v in SHARE_YAML['cdn'].items()}
+#    for k,v in SHARE_YAML['cdn'].iteritems()}
 CDN = SHARE_YAML['cdn']
 
 ## Keys ##
@@ -449,7 +449,7 @@ YOMIGANA_LANGUAGE_SET = frozenset(YOMIGANA_LANGUAGES)
 LINGOES_LANGS = SHARE_YAML['lingoes'] # [str lang]
 JMDICT_LANGS = SHARE_YAML['jmdict'] # [str lang]
 KANJIDIC_LANGS = SHARE_YAML['kanjidic'] # [str lang]
-STARDICT_LANGS = [it.partition('-')[2] for it in SHARE_YAML['stardict'].keys() if '-' in it] # [str lang]
+STARDICT_LANGS = [it.partition('-')[2] for it in SHARE_YAML['stardict'].iterkeys() if '-' in it] # [str lang]
 
 # Forum
 
@@ -490,51 +490,55 @@ TEMPLATE_ENTRIES = SHARE_YAML['templates']['entries'] # {str name:unicode relpat
 JCUSERDIC_LOCATIONS = map(parse_path, SHARE_YAML['jcuserdic']) # [unicode abspath]
 
 FONT_LOCATIONS = {k: parse_path(v) # {str key:unicode relpath}
-    for k,v in SHARE_YAML['font-family'].items()}
+    for k,v in SHARE_YAML['font-family'].iteritems()}
 
 TAHSCRIPT_LOCATIONS = {k: parse_path(v) # {str key:unicode relpath}
-    for k,v in SHARE_YAML['tahscript'].items()}
+    for k,v in SHARE_YAML['tahscript'].iteritems()}
 
 OPENCC_DICS = {k: parse_path(v) # {str key:unicode relpath}
-    for k,v in SHARE_YAML['opencc'].items()}
- 
+    for k,v in SHARE_YAML['opencc'].iteritems()}
+
+HANVIET_DICS = {k: parse_path(v) # {str key:unicode relpath}
+    for k,v in SHARE_YAML['hanviet'].iteritems()}
+HANVIET_DIC_LOCATION = os.path.dirname(HANVIET_DICS.itervalues().next())
+
 STARDICT_LOCATIONS = {k: parse_path(v) # {str lang:unicode relpath}
-    for k,v in SHARE_YAML['stardict'].items()}
+    for k,v in SHARE_YAML['stardict'].iteritems()}
 
 #MECAB_DIC_LOCATION = SHARE_YAML['mecab']['dicdir']
 #MECAB_RCFILE_LOCATION = SHARE_YAML['mecab']['rcfile']
 
 #CABOCHA_DICS = {k: parse_path(v) # {str name:unicode relpath}
-#    for k,v in SHARE_YAML['cabocha']['dicdir'].items()}
+#    for k,v in SHARE_YAML['cabocha']['dicdir'].iteritems()}
 #
 #CABOCHA_RCFILES = {k: parse_path(v) # {str name:unicode abspath}
-#    for k,v in SHARE_YAML['cabocha']['rcfile'].items()}
+#    for k,v in SHARE_YAML['cabocha']['rcfile'].iteritems()}
 
 GAIJI_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['gaiji'].items()}
+    for k,v in SHARE_YAML['gaiji'].iteritems()}
 
 APP_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['apps'].items()}
+    for k,v in SHARE_YAML['apps'].iteritems()}
 
 QML_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['qml'].items()}
+    for k,v in SHARE_YAML['qml'].iteritems()}
 
 QSS_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['qss'].items()}
+    for k,v in SHARE_YAML['qss'].iteritems()}
 
 ICON_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['icons'].items()}
+    for k,v in SHARE_YAML['icons'].iteritems()}
 
 IMAGE_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['images'].items()}
+    for k,v in SHARE_YAML['images'].iteritems()}
 
 YAML_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-    for k,v in SHARE_YAML['yaml'].items()}
+    for k,v in SHARE_YAML['yaml'].iteritems()}
 
 CURSOR_LOCATIONS = {k: parse_path(v) # {str name:unicode apspath}
-    for k,v in SHARE_YAML['cursors'].items()}
+    for k,v in SHARE_YAML['cursors'].iteritems()}
 
 #TRDB_LOCATIONS = {k: parse_path(v) # {str name:unicode abspath}
-#    for k,v in SHARE_YAML['trdb'].items()}
+#    for k,v in SHARE_YAML['trdb'].iteritems()}
 
 # EOF

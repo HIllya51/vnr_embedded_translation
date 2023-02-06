@@ -8,8 +8,6 @@ if __name__ == '__main__':
   import sys
   sys.path.append('..')
 
-import sys
-sys.path.append(__file__)
 from PySide.QtCore import QObject, Signal, QTimer
 from sakurakit.skclass import Q_Q
 from sakurakit.skdebug import dprint, dwarn

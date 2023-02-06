@@ -86,9 +86,9 @@ LCID_LOCALE = {
   LCID_UK_UA: 'uk_UA',
 }
 
-#LCID_LOCALE2 = {k:v[:2] for k,v in LCID_LOCALE.items()}
+#LCID_LOCALE2 = {k:v[:2] for k,v in LCID_LOCALE.iteritems()}
 
-LOCALE_LCID = {v:k for k,v in LCID_LOCALE.items()}
+LOCALE_LCID = {v:k for k,v in LCID_LOCALE.iteritems()}
 
 def lcid2locale(k): return LCID_LOCALE.get(k) or '' # long -> str
 def locale2lcid(k): return LOCALE_LCID.get(k) or 0  # str ->long
@@ -135,7 +135,7 @@ CODEPAGE_ENCODING = {
   CODEPAGE_VI: 'windows-1258',
 }
 
-ENCODING_CODEPAGE = {v:k for k,v in CODEPAGE_ENCODING.items()}
+ENCODING_CODEPAGE = {v:k for k,v in CODEPAGE_ENCODING.iteritems()}
 
 CODEPAGE_ENCODING = {
   CODEPAGE_UTF8: 'utf-8',
@@ -149,7 +149,7 @@ CODEPAGE_ENCODING = {
 
 CODEPAGE_ENCODING_PY = {k:
   v if v.startswith('utf') else "cp%s" % k
-  for k,v in CODEPAGE_ENCODING.items()}
+  for k,v in CODEPAGE_ENCODING.iteritems()}
 
 CODEPAGE_ENCODING_QT = {
   CODEPAGE_UTF8: 'utf-8',
@@ -169,8 +169,8 @@ CODEPAGE_ENCODING_QT = {
   CODEPAGE_VI: 'windows-1258',
 }
 
-ENCODING_PY = {v:CODEPAGE_ENCODING_PY[k] for k,v in CODEPAGE_ENCODING.items()}
-ENCODING_QT = {v:CODEPAGE_ENCODING_PY[k] for k,v in CODEPAGE_ENCODING.items()}
+ENCODING_PY = {v:CODEPAGE_ENCODING_PY[k] for k,v in CODEPAGE_ENCODING.iteritems()}
+ENCODING_QT = {v:CODEPAGE_ENCODING_PY[k] for k,v in CODEPAGE_ENCODING.iteritems()}
 
 def codepage2encoding(k): return CODEPAGE_ENCODING.get(k) or '' # long -> str
 def encoding2codepage(k): return ENCODING_CODEPAGE.get(k) or ''  # str ->long
