@@ -6,16 +6,16 @@ __all__ = 'RpcServer'
  
 RPC_WAIT_TIME = 3000 # wait time after sending data
 
-from socketsvc import socketpack
-import config
-
-ENABLE_TCP_SOCKET = config.APP_SOCKET_TYPE == 'tcp'
+from socketsvc import socketpack 
+APP_SOCKET_TYPE='local'
+APP_SOCKET_NAME='vnr.socket'
+ENABLE_TCP_SOCKET = APP_SOCKET_TYPE == 'tcp'
  
 def createSocketServer(parent=None, usetcp=ENABLE_TCP_SOCKET): 
     from socketsvc.localsocketsrv import LocalSocketServer
     ret = LocalSocketServer(parent)
-    ret.setServerName(config.APP_SOCKET_NAME)
-    dwarn("rpcname",config.APP_SOCKET_NAME) 
+    ret.setServerName(APP_SOCKET_NAME)
+    dwarn("rpcname",APP_SOCKET_NAME) 
     return ret
 # Client
  

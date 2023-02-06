@@ -5,7 +5,7 @@
 from PySide.QtCore import Signal, Slot, Property, Qt
 from sakurakit.skdebug import dprint, dwarn
 from pyvnrmem import VnrSharedMemory
-import config
+ 
 
 class VnrAgentSharedMemory:
   # Must be consistent with vnragent
@@ -25,7 +25,7 @@ class VnrAgentSharedMemory:
   def attachProcess(self, pid): # long -> bool
     d = self.__d
     d.processId = pid
-    key = config.VNRAGENT_MEMORY_KEY % pid
+    key = 'vnragent.%s' % pid
     d.setKey(key)
     return d.attach(False) # readOnly = false
 

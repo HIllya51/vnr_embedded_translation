@@ -7,7 +7,7 @@ from PySide.QtCore import QObject, Signal, QTimer
 from sakurakit.skclass import memoized, Q_Q
 from sakurakit.skdebug import dprint
 from vnragent import vnragent  
-import config, sharedmem, settings
+import  sharedmem 
 from sakurakit.skdebug import dprint, dwarn
 @memoized
 def global_(): return GameAgent()
@@ -212,22 +212,22 @@ class _GameAgent(object):
 
     self.clear()
 
-    ss = settings.global_()
-    for k,v in _SETTINGS_DICT.iteritems():
-      sig = getattr(ss, k + 'Changed')
+    # ss = settings.global_()
+    # for k,v in _SETTINGS_DICT.iteritems():
+    #   sig = getattr(ss, k + 'Changed')
 
-      sig.connect(partial(lambda k, t:
-        self.connectedPid and self.sendSetting(k, t)
-      , k))
+    #   sig.connect(partial(lambda k, t:
+    #     self.connectedPid and self.sendSetting(k, t)
+    #   , k))
 
-    for sig in ss.embeddedScenarioWidthChanged, ss.embeddedScenarioWidthEnabledChanged:
-      sig.connect(self._sendScenarioWidth)
-    for sig in ss.embeddedFontFamilyChanged, ss.embeddedFontEnabledChanged:
-      sig.connect(self._sendFontFamily)
-    for sig in ss.embeddedFontScaleChanged, ss.embeddedFontScaleEnabledChanged:
-      sig.connect(self._sendFontScale)
-    for sig in ss.embeddedFontWeightChanged, ss.embeddedFontWeightEnabledChanged:
-      sig.connect(self._sendFontWeight)
+    # for sig in ss.embeddedScenarioWidthChanged, ss.embeddedScenarioWidthEnabledChanged:
+    #   sig.connect(self._sendScenarioWidth)
+    # for sig in ss.embeddedFontFamilyChanged, ss.embeddedFontEnabledChanged:
+    #   sig.connect(self._sendFontFamily)
+    # for sig in ss.embeddedFontScaleChanged, ss.embeddedFontScaleEnabledChanged:
+    #   sig.connect(self._sendFontScale)
+    # for sig in ss.embeddedFontWeightChanged, ss.embeddedFontWeightEnabledChanged:
+    #   sig.connect(self._sendFontWeight)
  
     # Got this value from embeddedprefs.py
     self.extractsAllTexts = False
@@ -274,19 +274,20 @@ class _GameAgent(object):
       dwarn( ("Unrecognized game engine. Fallback to ITH."))
 
   def sendSettings(self):
-    ss = settings.global_()
-    data = {k:apply(getattr(ss, v)) for k,v in _SETTINGS_DICT.iteritems()}
-    data['debug'] = False
-    data['gameEncoding'] = self.gameEncoding
-    data['embeddedTextEnabled'] =True# self.textExtractionEnabled
-    data['embeddedAllTextsExtracted'] = self.extractsAllTexts
-    data['scenarioSignature'] = self.scenarioSignature
-    data['nameSignature'] = self.nameSignature
+    # ss = settings.global_()
+    # data = {k:apply(getattr(ss, v)) for k,v in _SETTINGS_DICT.iteritems()}
+    # data['debug'] = False
+    # data['gameEncoding'] = self.gameEncoding
+    # data['embeddedTextEnabled'] =True# self.textExtractionEnabled
+    # data['embeddedAllTextsExtracted'] = self.extractsAllTexts
+    # data['scenarioSignature'] = self.scenarioSignature
+    # data['nameSignature'] = self.nameSignature
 
-    data['embeddedScenarioWidth'] = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
-    data['embeddedFontFamily'] = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
-    data['embeddedFontScale'] = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
-    data['embeddedFontWeight'] = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
+    # data['embeddedScenarioWidth'] = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
+    # data['embeddedFontFamily'] = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
+    # data['embeddedFontScale'] = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
+    # data['embeddedFontWeight'] = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
+    data=  {"embeddedScenarioTranscodingEnabled": False, "embeddedFontCharSetEnabled": True, "embeddedTranslationWaitTime": 2000, "embeddedOtherTranscodingEnabled": False, "embeddedSpacePolicyEncoding": "", "windowTranslationEnabled": True, "windowTextVisible": True, "embeddedNameTranscodingEnabled": False, "gameEncoding": "shift-jis", "embeddedOtherTranslationEnabled": True, "embeddedSpaceSmartInserted": False, "embeddedFontCharSet": 128, "embeddedScenarioWidth": 0, "embeddedScenarioTextVisible": True, "windowTranscodingEnabled": False, "nameSignature": 0, "embeddedScenarioTranslationEnabled": True, "embeddedScenarioVisible": True, "embeddedFontScale": 0, "embeddedAllTextsExtracted": False, "embeddedOtherVisible": True, "embeddedFontFamily": "", "embeddedTextEnabled": True, "scenarioSignature": 0, "embeddedOtherTextVisible": True, "embeddedNameTextVisible": True, "embeddedSpaceAlwaysInserted": False, "embeddedNameTranslationEnabled": True, "debug": False, "embeddedNameVisible": True, "embeddedFontWeight": 0}
     self.rpc.setAgentSettings(data)
 
   def sendSetting(self, k, v):
@@ -294,27 +295,31 @@ class _GameAgent(object):
     self.rpc.setAgentSettings(data)
 
   def _sendScenarioWidth(self):
-    ss = settings.global_()
-    v = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
-    data = {'embeddedScenarioWidth':v}
-    self.rpc.setAgentSettings(data)
+    # ss = settings.global_()
+    # v = ss.embeddedScenarioWidth() if ss.isEmbeddedScenarioWidthEnabled() else 0
+    # data = {'embeddedScenarioWidth':v}
+    # self.rpc.setAgentSettings(data)
+    1
 
   def _sendFontFamily(self):
-    ss = settings.global_()
-    v = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
-    data = {'embeddedFontFamily':v}
-    self.rpc.setAgentSettings(data)
+    1
+    # ss = settings.global_()
+    # v = ss.embeddedFontFamily() if ss.isEmbeddedFontEnabled() else ''
+    # data = {'embeddedFontFamily':v}
+    # self.rpc.setAgentSettings(data)
 
   def _sendFontWeight(self):
-    ss = settings.global_()
-    v = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
-    data = {'embeddedFontWeight':v}
-    self.rpc.setAgentSettings(data)
+    1
+    # ss = settings.global_()
+    # v = ss.embeddedFontWeight() * 100 if ss.isEmbeddedFontWeightEnabled() else 0
+    # data = {'embeddedFontWeight':v}
+    # self.rpc.setAgentSettings(data)
 
   def _sendFontScale(self):
-    ss = settings.global_()
-    v = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
-    data = {'embeddedFontScale':v}
-    self.rpc.setAgentSettings(data)
+    1
+    # ss = settings.global_()
+    # v = ss.embeddedFontScale() if ss.isEmbeddedFontScaleEnabled() else 0
+    # data = {'embeddedFontScale':v}
+    # self.rpc.setAgentSettings(data)
 
 # EOF
