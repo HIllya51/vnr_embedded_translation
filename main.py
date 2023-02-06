@@ -27,6 +27,7 @@ if __name__=="__main__":
     app.rpc.start()   
     app.ga=GameAgent(app.rpc)
     app.ga.attachProcess(pid=int(sys.argv[1]))
+    print(app.ga.guessEngine(pid=int(sys.argv[1])))
     app.rpc.engineTextReceived.connect(app.ga.sendEmbeddedTranslation)  
     app.rpc.disableAgent
     app.rpc.clearAgentTranslation() 
