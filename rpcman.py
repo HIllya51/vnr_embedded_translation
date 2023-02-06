@@ -41,11 +41,9 @@ def _marshalBool(v): # int -> str, use hex
 #from ctypes import c_longlong
 from functools import partial
 import json
-from PySide.QtCore import Signal, Qt, QObject
-from sakurakit.skclass import Q_Q, memoized
+from PySide.QtCore import Signal, Qt, QObject 
 from sakurakit.skdebug import dwarn, dprint     
-
-@memoized
+  
 def manager(): return RpcServer()
 
 class RpcServer(QObject):

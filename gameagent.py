@@ -1,15 +1,12 @@
 # coding: utf8
 # gameagent.py
 # 5/2/2014 jichi
-
-from functools import partial
-from PySide.QtCore import QObject, Signal, QTimer
-from sakurakit.skclass import memoized, Q_Q
-from sakurakit.skdebug import dprint
+ 
+from PySide.QtCore import QObject, Signal, QTimer  
 from vnragent import vnragent  
 import  sharedmem 
 from sakurakit.skdebug import dprint, dwarn
-@memoized
+
 def global_(): return GameAgent()
 
 class GameAgent(QObject):

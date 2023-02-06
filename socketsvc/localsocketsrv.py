@@ -10,8 +10,7 @@ if __name__ == '__main__':
 
 import weakref
 from functools import partial
-from PySide.QtCore import QObject, Signal
-from sakurakit.skclass import Q_Q
+from PySide.QtCore import QObject, Signal 
 from sakurakit.skdebug import dprint, dwarn
 import socketio
 
