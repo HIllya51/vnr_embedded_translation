@@ -17,14 +17,16 @@ class qapp(QCoreApplication):
         while True:
             a=raw_input()
             if a=='quit':
+                self.ga.quit()
                 self.end.emit()
                 break
 if __name__=="__main__":
     app =  qapp(sys.argv) 
     rpc=RpcServer()
     rpc.start()   
-    ga=GameAgent(rpc)
-    ga.attachProcess(pid=int(sys.argv[1]))
-    rpc.engineTextReceived.connect(ga.sendEmbeddedTranslation)  
+    app.ga=GameAgent(rpc)
+    app.ga.attachProcess(pid=int(sys.argv[1]))
+    rpc.engineTextReceived.connect(app.ga.sendEmbeddedTranslation)  
+    rpc.disableAgent
     rpc.clearAgentTranslation() 
     sys.exit(app.exec_())
