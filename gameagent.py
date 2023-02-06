@@ -272,7 +272,7 @@ class _GameAgent(object):
       dwarn("%s: %s" % ( ("Detect game engine"), name))
     else:
       dwarn( ("Unrecognized game engine. Fallback to ITH."))
-
+      self.q.callbadengine.emit()
   def sendSettings(self):
     # ss = settings.global_()
     # data = {k:apply(getattr(ss, v)) for k,v in _SETTINGS_DICT.iteritems()}

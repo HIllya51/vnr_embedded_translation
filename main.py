@@ -16,6 +16,7 @@ class qapp(QCoreApplication):
     pipe_agent2host=Signal(str)
     connected=Signal()
     engineTextReceived_tohost=Signal(unicode, str,  int )
+    callbadengine=Signal()
     def __init__(self,arg) :
         super(qapp,self).__init__(arg) 
         t1=threading.Thread(target=self._creater1) 
@@ -31,9 +32,12 @@ class qapp(QCoreApplication):
         self.end.connect(self.quit)
         self.engineTextReceived_tohost.connect(self.transfer_to_host) 
         self.connected.connect(self.connectget)
+        self.callbadengine.connect(self.badengine)
         threading.Thread(target=self.waitforconnect).start()
     def connectget(self ):
         self.isconnect=True
+    def badengine(self):
+        self.send({"command":"badengine"})
     def waitforconnect(self):
         time.sleep(5)
         if self.isconnect==False:
@@ -87,6 +91,7 @@ if __name__=="__main__":
     app.rpc.start()   
     app.ga=GameAgent(app.rpc,app)
     app.ga.attachProcess(pid=int(sys.argv[1])) 
+    app.ga.callbadengine=app.callbadengine
     engine=app.ga.guessEngine(pid=int(sys.argv[1]))
     if engine:
         app.send(({'command':"engine","name":engine.name} ))
