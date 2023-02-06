@@ -5,11 +5,11 @@
 import os
 def inject_vnragent(pid): 
   ret = True
-  for dllpath in ['dlls/msvcr100.dll',
-                  'dlls/msvcp100.dll',
-                  'PySide/QtCore4.dll',
-                  'PySide/QtNetwork4.dll',
-                  'dlls/vnragent.dll']:
+  for dllpath in ['msvcr100.dll',
+                  'msvcp100.dll',
+                  'qtcore4.dll',
+                  'qtnetwork4.dll',
+                  'vnragent']:
     
     #dllpath = os.path.abspath(dllpath)
     dllpath = os.path.abspath(dllpath)   

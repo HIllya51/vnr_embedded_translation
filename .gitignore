@@ -301,3 +301,10 @@ build/main.dist/win32process.pyd
 build/main.dist/win32security.pyd
 build/main.dist/win32ui.pyd
 build/main.dist/yaml/_yaml.pyd
+build/main.build/__init__.py
+build/main.build/clcache-stats.804.txt
+build/main.build/engine.py
+build/main.build/engines.py
+build/main.build/engines.yaml
+build/main.build/vnragent.py
+build/main.dist/vnragent.dll
