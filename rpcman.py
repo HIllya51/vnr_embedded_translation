@@ -93,7 +93,7 @@ class RpcServer(QObject):
     try:
       data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
       self.__d.callAgent('settings', data)
-    except TypeError, e:
+    except TypeError as e:
       dwarn("failed to encode json: %s" % e)
 
   def clearAgentTranslation(self): self.__d.callAgent('clear')
@@ -105,7 +105,7 @@ class RpcServer(QObject):
     try:
       data = json.dumps(data) #, ensure_ascii=False) # the json parser in vnragent don't enforce ascii
       self.__d.callAgent('window.text', data)
-    except TypeError, e:
+    except TypeError as e:
       dwarn("failed to encode json: %s" % e)
 
   #def sendEngineTranslation(self, text, hash, role):
@@ -216,7 +216,7 @@ class _RpcServer(object):
         self.q.windowTextsReceived.emit(d)
       else:
         dwarn("error: json is not a map: %s" % data)
-    except (ValueError, TypeError, AttributeError), e:
+    except (ValueError, TypeError, AttributeError) as e:
       dwarn(e)
       #dwarn("error: malformed json: %s" % data)
 

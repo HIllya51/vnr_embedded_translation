@@ -40,7 +40,7 @@ def get_process_path(pid):
         # This function returns WCHAR
         path = win32process.GetModuleFileNameEx(h, 0)
         win32api.CloseHandle(h)
-    except Exception, e: dwarn(e)
+    except Exception  as e: dwarn(e)
     return path
 def match(pid=0, path=None):
   """

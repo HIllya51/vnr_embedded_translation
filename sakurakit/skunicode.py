@@ -92,41 +92,4 @@ def sjis_decodable(s): return decodable(s, 'cp932')
 def u_sjis(s):
   try: return s.decode('cp932')
   except (UnicodeDecodeError, AttributeError): return u(s)
-
-if __name__ == '__main__':
-  t = u'hello'
-  t = t.encode('cp1252')
-  e = 'iso-8859-1'
-  print qunicode(t, e)
-
-  s = u'こんにちは'
-  t = s.encode('cp932')
-  e = 'sjis'
-  print qunicode(t, e) == s
-
-  s = u'곤주님'
-  t = s.encode('cp949')
-  #e = 'euc-kr'
-  e = 'cp949'
-  print qunicode(t, e) == s
-
-  s = u'Чан'
-  t = s.encode('cp1251')
-  e = 'koi8-r'
-  print qunicode(t, e) == s
-
-  s = u'จันทร์'
-  t = s.encode('cp874')
-  #e = 'iso-8859-11'
-  #e = 'ibm-874'
-  #e = 'tis-620'
-  e = 'cp874'
-  print qunicode(t, e) == s
-
-  e = 'cp949'
-  e = 'cp874'
-  from PySide.QtCore import QTextCodec
-  c = QTextCodec.codecForName(e)
-  print e, c.aliases()
-
-# EOF
+ 
