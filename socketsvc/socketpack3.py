@@ -53,7 +53,7 @@ def packuint32(i): # int -> str
   @return  str  4 bytes
   """
   print("packint32")
-  return chr((i >> 24) & 0xff) + chr((i >> 16) & 0xff) + chr((i >> 8) & 0xff) + chr(i & 0xff)
+  return bytes(chr((i >> 24) & 0xff) + chr((i >> 16) & 0xff) + chr((i >> 8) & 0xff) + chr(i & 0xff),encoding='latin-1')
  
 
 def packdata(data):
@@ -91,14 +91,11 @@ def packstrlist(l, encoding='utf8'):
     s = s.encode(encoding, errors='ignore')
     head.append(len(s))
     body.append(s)
-  
-  if sys.version_info.major==2:
-    print('iamg',''.join(imap(packuint32, head)) + ''.join(body))
-    from itertools import imap
-    return ''.join(imap(packuint32, head)) + ''.join(body)
-  else:
-    print(b''.join(map(packuint32, head)) + b''.join(body))
-    return b''.join(map(packuint32, head)) + b''.join(body)
+  print(body)
+  print(head)
+   
+  print(list(map(packuint32, head))  )
+  return b''.join(map(packuint32, head)) + b''.join(body)
 
 def unpackstrlist(data, encoding='utf8'):
   """

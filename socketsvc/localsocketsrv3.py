@@ -137,7 +137,7 @@ class _LocalSocketServer(object):
       dwarn(e)
 
   def writeSocket(self, data, socket):
-    if isinstance(data, unicode):
+    if isinstance(data, str):
       data = data.encode(self.encoding, errors='ignore')
     return socketio.writesocket(data, socket)
  
